@@ -10,9 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cr.ac.utn.conversordemonedas.ui.theme.ConversorDeMonedasTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,14 +22,6 @@ class MainActivity : ComponentActivity() {
                     onGoToConversion = {
                         val intent = Intent(this, ConversionActivity::class.java)
                         startActivity(intent)
-                    },
-                    onGoToCamera = {
-                        val intent = Intent(this, CameraActivity::class.java)
-                        startActivity(intent)
-                    },
-                    onGoToGallery = {
-                        val intent = Intent(this, GalleryActivity::class.java)
-                        startActivity(intent)
                     }
                 )
             }
@@ -40,47 +30,38 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainMenuScreen(
-    onGoToConversion: () -> Unit,
-    onGoToCamera: () -> Unit,
-    onGoToGallery: () -> Unit
-) {
+fun MainMenuScreen(onGoToConversion: () -> Unit) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.main_title),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                text = "Bienvenido al Conversor de Monedas",
+                style = MaterialTheme.typography.headlineSmall
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = stringResource(R.string.main_description),
-                fontSize = 16.sp
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(onClick = onGoToConversion) {
-                Text(text = stringResource(R.string.btn_go_conversion))
+                Text(text = stringResource(R.string.btn_go_to_conversion))
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = onGoToCamera) {
+            // Botón de cámara (solo interfaz, sin acción)
+            Button(onClick = { /* no implementado */ }) {
                 Text(text = stringResource(R.string.btn_open_camera))
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = onGoToGallery) {
+            // Botón de galería (solo interfaz, sin acción)
+            Button(onClick = { /* no implementado */ }) {
                 Text(text = stringResource(R.string.btn_open_gallery))
             }
         }

@@ -39,11 +39,6 @@ fun HistoryScreen() {
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.history_title)) }
-            )
-        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -52,11 +47,6 @@ fun HistoryScreen() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.history_title),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
