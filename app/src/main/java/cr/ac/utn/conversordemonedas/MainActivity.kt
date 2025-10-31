@@ -1,16 +1,16 @@
 package cr.ac.utn.conversordemonedas
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cr.ac.utn.conversordemonedas.ui.theme.ConversorDeMonedasTheme
@@ -18,81 +18,71 @@ import cr.ac.utn.conversordemonedas.ui.theme.ConversorDeMonedasTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             ConversorDeMonedasTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    ConversorDeMonedas(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainMenuScreen(
+                    onGoToConversion = {
+                        val intent = Intent(this, ConversionActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onGoToCamera = {
+                        val intent = Intent(this, CameraActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onGoToGallery = {
+                        val intent = Intent(this, GalleryActivity::class.java)
+                        startActivity(intent)
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun ConversorDeMonedas(modifier: Modifier = Modifier) {
-    var monto by remember { mutableStateOf("") }
-    var resultado by remember { mutableStateOf("") }
-    var tipoCambio by remember { mutableStateOf(525.0) } // Ejemplo: 1 USD = 525 CRC
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(
-            text = "Conversor de Monedas 💱",
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        OutlinedTextField(
-            value = monto,
-            onValueChange = { monto = it },
-            label = { Text("Monto en USD") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                val valor = monto.toDoubleOrNull()
-                if (valor != null) {
-                    val calculo = valor * tipoCambio
-                    resultado = "₡ %.2f".format(calculo)
-                } else {
-                    resultado = "Por favor, ingresa un número válido"
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+fun MainMenuScreen(
+    onGoToConversion: () -> Unit,
+    onGoToCamera: () -> Unit,
+    onGoToGallery: () -> Unit
+) {
+    Scaffold { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Convertir a colones")
+            Text(
+                text = stringResource(R.string.main_title),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = stringResource(R.string.main_description),
+                fontSize = 16.sp
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(onClick = onGoToConversion) {
+                Text(text = stringResource(R.string.btn_go_conversion))
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(onClick = onGoToCamera) {
+                Text(text = stringResource(R.string.btn_open_camera))
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(onClick = onGoToGallery) {
+                Text(text = stringResource(R.string.btn_open_gallery))
+            }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = resultado,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ConversorDeMonedasPreview() {
-    ConversorDeMonedasTheme {
-        ConversorDeMonedas()
     }
 }
