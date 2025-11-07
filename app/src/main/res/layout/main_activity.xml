@@ -15,7 +15,7 @@
 
         <!-- Botones principales -->
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/Title_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
@@ -26,7 +26,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/Description_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Convierte divisas al instante escribiendo, escaneando o seleccionando desde tu galería"
@@ -64,7 +64,7 @@
             android:padding="12dp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/Instruction_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
@@ -80,7 +80,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/Option1_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:rotationY="0"
@@ -89,7 +89,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/Option2_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="- Tipos de cambio en tiempo real"
@@ -98,7 +98,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/Option3_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="- Escanea las cantidades con tu cámara"
@@ -106,7 +106,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/Option4_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="- Lee las cantidades en las imágenes de la galería"
@@ -114,7 +114,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/Option5_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="14sp"
@@ -123,11 +123,6 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
-
-        <!-- Sección informativa -->
-
-        <!-- Lista de características -->
-
     </LinearLayout>
 </ScrollView>
 

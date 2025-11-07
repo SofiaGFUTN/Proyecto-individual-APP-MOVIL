@@ -31,4 +31,21 @@
     <string name="btn_ok">OK</string>
     <string name="label_loading">Loading...</string>
     <string name="msg_no_internet">No internet connection available.</string>
+    <string name="btn_add_currency">Add money</string>
+    <string name="btn_edit_currency">Edit money</string>
+    <string name="btn_delete_currency">Delete money</string>
+    <string name="btn_clear_all_currencies">Delete all</string>
+    <string name="msg_currency_added">Currency added successfully.</string>
+    <string name="msg_currency_exists">A coin with that code already exists.</string>
+    <string name="msg_currency_updated">Currency updated correctly.</string>
+    <string name="msg_currency_deleted">Currency removed.</string>
+    <string name="msg_currency_not_found">The coin was not found.</string>
+    <string name="msg_all_cleared">All coins were removed.</string>
+    <string name="dialog_add_currency">Add Money</string>
+    <string name="dialog_edit_currency">Edit Money</string>
+    <string name="dialog_delete_currency">Delete Money</string>
+    <string name="dialog_search_currency">Search Money</string>
+    <string name="hint_currency_code">Code (e.g., USD)</string>
+    <string name="hint_currency_name">Name (e.g., US Dollar)</string>
+    <string name="hint_currency_rate">Rate (e.g., 1.0)</string>
 </resources>

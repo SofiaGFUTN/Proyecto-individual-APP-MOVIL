@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@android:style/Widget.DeviceDefault.Light.ScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#FFFFFF"
     android:padding="20dp">
 
@@ -12,12 +14,9 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <!-- Título -->
-
-        <!-- Selección de monedas -->
-
+        <!-- Conversión de Moneda -->
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/Title_conversion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
@@ -41,15 +40,14 @@
                 android:paddingEnd="8dp">
 
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/from_conversion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="serif"
                     android:text="De:"
                     android:textColor="@color/black" />
 
                 <Spinner
-                    android:id="@+id/spinnerFrom"
+                    android:id="@+id/typeMoney1_conversion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:drawable/btn_dropdown" />
@@ -64,23 +62,20 @@
                 android:paddingStart="8dp">
 
                 <TextView
-                    android:id="@+id/textView11"
+                    android:id="@+id/to_conversion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="A:"
                     android:textColor="@color/black" />
 
                 <Spinner
-                    android:id="@+id/spinnerTo"
+                    android:id="@+id/typeMoney2_conversion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:drawable/btn_dropdown" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Campo de monto -->
-
-        <!-- Botones principales -->
         <EditText
             android:id="@+id/editTextNumberDecimal"
             android:layout_width="match_parent"
@@ -118,11 +113,43 @@
                 android:textColor="@color/black" />
         </LinearLayout>
 
-        <!-- Tasa actual -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <!-- Resultado -->
+            <ImageButton
+                android:id="@+id/iconAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_menu_add" />
+
+            <ImageButton
+                android:id="@+id/iconEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:id="@+id/iconDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_menu_delete" />
+
+            <ImageButton
+                android:id="@+id/iconSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_menu_search" />
+
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/currentRate_conversion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
@@ -133,7 +160,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/result_conversion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Resultado"
@@ -150,7 +177,6 @@
             android:textColor="@color/purple_500"
             android:textSize="24sp" />
 
-        <!-- Botón actualizar -->
         <Button
             android:id="@+id/btnUpdateRate"
             android:layout_width="wrap_content"
@@ -161,10 +187,8 @@
             android:text="@string/btn_update_rate"
             android:textColor="@color/black" />
 
-        <!-- Conversiones recientes -->
-
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/Recent_conversion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
@@ -181,6 +205,5 @@
             android:layout_marginTop="10dp"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dp" />
-
     </LinearLayout>
 </ScrollView>

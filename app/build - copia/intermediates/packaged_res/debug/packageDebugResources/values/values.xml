@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="gray_light">#F2F2F2</color>
+    <color name="purple_200">#B6A8F9</color>
+    <color name="purple_500">#6A5AE0</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">Currency Converter</string>
+    <string name="btn_back">Atrás</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_clear">Clara</string>
+    <string name="btn_convert">Convertir</string>
+    <string name="btn_go_to_conversion">Ir a Conversión</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_open_camera">Abrir cámara</string>
+    <string name="btn_open_gallery">Elige de la galería</string>
+    <string name="btn_save">Guardar</string>
+    <string name="btn_select_image">Seleccionar imagen</string>
+    <string name="btn_start_conversion">Iniciar conversión</string>
+    <string name="btn_take_photo">tomar foto</string>
+    <string name="btn_try_again">Intenta otra vez</string>
+    <string name="btn_update_rate">Actualizar</string>
+    <string name="camera_instruction">Apunta la cámara a un número para detectarlo y convertirlo automáticamente.</string>
+    <string name="gallery_instruction">Elige una imagen con números para convertir.</string>
+    <string name="gallery_title">Seleccionar de la galería</string>
+    <string name="history_clear_all">Borrar todo</string>
+    <string name="history_empty">Aún no hay conversiones.</string>
+    <string name="label_amount">Ingrese la cantidad</string>
+    <string name="label_loading">Cargando...</string>
+    <string name="msg_camera_error">No se puede acceder a la cámara. Inténtelo de nuevo.</string>
+    <string name="msg_camera_permission">Se requiere permiso para usar la cámara para escanear cantidades.</string>
+    <string name="msg_conversion_error">Se produjo un error durante la conversión.</string>
+    <string name="msg_history_cleared">Historial borrado.</string>
+    <string name="msg_image_processed">¡Imagen procesada exitosamente!</string>
+    <string name="msg_invalid_input">Por favor, introduzca un número válido.</string>
+    <string name="msg_no_image_selected">Ninguna imagen seleccionada.</string>
+    <string name="msg_no_internet">No hay conexión a internet disponible.</string>
+    <string name="msg_rate_updated">Tipo de cambio actualizado correctamente.</string>
+    <style name="Theme.ConversorDeMonedas" parent="android:Theme.Material.Light.NoActionBar"/>
+</resources>
