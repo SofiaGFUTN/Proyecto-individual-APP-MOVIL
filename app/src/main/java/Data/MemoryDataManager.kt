@@ -1,22 +1,33 @@
-package Data
-import Model.Currency
+package cr.ac.utn.conversordemonedas.data
+
+import cr.ac.utn.conversordemonedas.model.Conversion
 
 class MemoryDataManager : IDataManager {
 
-    private val currencyList = mutableListOf(
-        Currency("USD", "Dólar estadounidense", 1.0),
-        Currency("CRC", "Colón costarricense", 520.0),
-        Currency("EUR", "Euro", 0.93),
-        Currency("MXN", "Peso mexicano", 18.0)
-    )
+    private val conversionList = mutableListOf<Conversion>()
+    private var idCounter = 1
 
-    override fun getCurrencies(): List<Currency> = currencyList
-
-    override fun getCurrency(code: String): Currency? {
-        return currencyList.find { it.code == code }
+    override fun addConversion(conversion: Conversion) {
+        conversion.id = idCounter++
+        conversionList.add(conversion)
     }
 
-    override fun addCurrency(currency: Currency) {
-        currencyList.add(currency)
+    override fun getAllConversions(): MutableList<Conversion> = conversionList
+
+    override fun updateConversion(conversion: Conversion) {
+        val index = conversionList.indexOfFirst { it.id == conversion.id }
+        if (index != -1) {
+            conversionList[index] = conversion
+        }
+    }
+
+    override fun deleteConversion(id: Int) {
+        conversionList.removeIf { it.id == id }
+    }
+
+    override fun findConversionByCurrency(currency: String): MutableList<Conversion> {
+        return conversionList.filter {
+            it.fromCurrency.contains(currency, true) || it.toCurrency.contains(currency, true)
+        }.toMutableList()
     }
 }

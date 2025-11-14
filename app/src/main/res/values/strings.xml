@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- APP GENERAL -->
     <string name="app_name">Currency Converter</string>
@@ -11,24 +12,11 @@
     <!-- CONVERSION SCREEN -->
     <string name="label_amount">Ingrese la cantidad</string>
     <string name="btn_convert">Convertir</string>
-    <string name="btn_clear">Clara</string>
+    <string name="btn_clear">Limpiar</string>
     <string name="btn_update_rate">Actualizar</string>
     <string name="msg_invalid_input">Por favor, introduzca un número válido.</string>
     <string name="msg_conversion_error">Se produjo un error durante la conversión.</string>
     <string name="msg_rate_updated">Tipo de cambio actualizado correctamente.</string>
-
-    <!-- CAMERA SCAN -->
-    <string name="camera_instruction">Apunta la cámara a un número para detectarlo y convertirlo automáticamente.</string>
-    <string name="btn_take_photo">tomar foto</string>
-    <string name="msg_camera_permission">Se requiere permiso para usar la cámara para escanear cantidades.</string>
-    <string name="msg_camera_error">No se puede acceder a la cámara. Inténtelo de nuevo.</string>
-
-    <!-- GALLERY -->
-    <string name="gallery_title">Seleccionar de la galería</string>
-    <string name="gallery_instruction">Elige una imagen con números para convertir.</string>
-    <string name="btn_select_image">Seleccionar imagen</string>
-    <string name="msg_no_image_selected">Ninguna imagen seleccionada.</string>
-    <string name="msg_image_processed">¡Imagen procesada exitosamente!</string>
 
     <!-- HISTORY -->
     <string name="history_empty">Aún no hay conversiones.</string>
@@ -43,4 +31,27 @@
     <string name="btn_ok">OK</string>
     <string name="label_loading">Cargando...</string>
     <string name="msg_no_internet">No hay conexión a internet disponible.</string>
+
+    <!-- CRUD Monedas -->
+    <string name="btn_add_currency">Agregar moneda</string>
+    <string name="btn_edit_currency">Editar moneda</string>
+    <string name="btn_delete_currency">Eliminar moneda</string>
+    <string name="btn_clear_all_currencies">Borrar todas</string>
+
+    <string name="msg_currency_added">Moneda agregada correctamente.</string>
+    <string name="msg_currency_exists">Ya existe una moneda con ese código.</string>
+    <string name="msg_currency_updated">Moneda actualizada correctamente.</string>
+    <string name="msg_currency_deleted">Moneda eliminada.</string>
+    <string name="msg_currency_not_found">No se encontró la moneda.</string>
+    <string name="msg_all_cleared">Todas las monedas fueron eliminadas.</string>
+
+    <!-- DIALOGS/INPUT HINTS -->
+    <string name="dialog_add_currency">Agregar Moneda</string>
+    <string name="dialog_edit_currency">Editar Moneda</string>
+    <string name="dialog_delete_currency">Eliminar Moneda</string>
+    <string name="dialog_search_currency">Buscar Moneda</string>
+
+    <string name="hint_currency_code">Código (ej: USD)</string>
+    <string name="hint_currency_name">Nombre (ej: Dólar Estadounidense)</string>
+    <string name="hint_currency_rate">Tasa (ej: 1.0)</string>
 </resources>

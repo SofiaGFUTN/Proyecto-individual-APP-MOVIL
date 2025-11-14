@@ -1,0 +1,12 @@
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\Util\Util.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\cr\ac\utn\conversordemonedas\ui\theme\Theme.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\Controller\CurrencyController.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\Model\Currency.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\cr\ac\utn\conversordemonedas\ConversionActivity.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\Model\Conversion.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\cr\ac\utn\conversordemonedas\MainActivity.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\cr\ac\utn\conversordemonedas\ui\theme\Type.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\cr\ac\utn\conversordemonedas\ui\theme\Color.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\Data\IDataManager.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\cr\ac\utn\conversordemonedas\HistoryActivity.kt
+C:\Users\soniy\OneDrive\Documents\GitHub\Proyecto-individual-APP-MOVIL\app\src\main\java\Data\MemoryDataManager.kt

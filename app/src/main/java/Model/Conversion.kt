@@ -1,8 +1,9 @@
-package Model
+package cr.ac.utn.conversordemonedas.model
 
 data class Conversion(
-    val fromCurrency: Currency,
-    val toCurrency: Currency,
-    val amount: Double,
-    val result: Double
+    var id: Int = 0,
+    var fromCurrency: String,
+    var toCurrency: String,
+    var amount: Double,
+    var result: Double
 )

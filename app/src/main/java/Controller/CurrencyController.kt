@@ -1,23 +1,55 @@
-package Controller
+package cr.ac.utn.conversordemonedas
 
-import Model.Currency
-import Model.Conversion
-import Data.MemoryDataManager
+data class Currency(
+    var code: String,
+    var name: String,
+    var rate: Double
+)
 
-class CurrencyController(private val dataManager: MemoryDataManager) {
+class CurrencyController {
+    private val currencyList = mutableListOf<Currency>()
 
-    fun convert(fromCode: String, toCode: String, amount: Double): Conversion? {
-        val from = dataManager.getCurrency(fromCode)
-        val to = dataManager.getCurrency(toCode)
-
-        if (from != null && to != null) {
-            val result = amount / from.rate * to.rate
-            return Conversion(from, to, amount, result)
-        }
-        return null
+    init {
+        //Datos iniciales de ejemplo
+        currencyList.add(Currency("USD", "Dólar estadounidense", 1.0))
+        currencyList.add(Currency("CRC", "Colón costarricense", 520.0))
+        currencyList.add(Currency("EUR", "Euro", 0.92))
     }
 
-    fun getAvailableCurrencies(): List<Currency> {
-        return dataManager.getCurrencies()
+    //CREATE
+    fun addCurrency(currency: Currency): Boolean {
+        if (currencyList.any { it.code.equals(currency.code, ignoreCase = true) }) return false
+        currencyList.add(currency)
+        return true
+    }
+
+    //READ
+    fun getAllCurrencies(): List<Currency> {
+        return currencyList
+    }
+
+    //SEARCH
+    fun searchCurrency(code: String): Currency? {
+        return currencyList.find { it.code.equals(code, ignoreCase = true) }
+    }
+
+    //UPDATE
+    fun updateCurrency(code: String, name: String, rate: Double): Boolean {
+        val currency = searchCurrency(code)
+        return if (currency != null) {
+            currency.name = name
+            currency.rate = rate
+            true
+        } else false
+    }
+
+    //DELETE
+    fun deleteCurrency(code: String): Boolean {
+        return currencyList.removeIf { it.code.equals(code, ignoreCase = true) }
+    }
+
+    //DELETE ALL
+    fun clearAll() {
+        currencyList.clear()
     }
 }

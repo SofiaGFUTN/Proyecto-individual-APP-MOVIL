@@ -22,7 +22,18 @@ class MainActivity : ComponentActivity() {
                     onGoToConversion = {
                         val intent = Intent(this, ConversionActivity::class.java)
                         startActivity(intent)
+                    },
+                    // Las siguientes están comentadas porque aún no usas cámara ni galería
+                    /*
+                    onGoToCamera = {
+                        val intent = Intent(this, CameraActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onGoToGallery = {
+                        val intent = Intent(this, GalleryActivity::class.java)
+                        startActivity(intent)
                     }
+                    */
                 )
             }
         }
@@ -30,40 +41,40 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainMenuScreen(onGoToConversion: () -> Unit) {
+fun MainMenuScreen(
+    onGoToConversion: () -> Unit,
+    //onGoToCamera: () -> Unit,
+    //onGoToGallery: () -> Unit
+) {
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Bienvenido al Conversor de Monedas",
-                style = MaterialTheme.typography.headlineSmall
-            )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Button(onClick = onGoToConversion) {
-                Text(text = stringResource(R.string.btn_go_to_conversion))
+                Text(text = "Ir a conversión")
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Botón de cámara (solo interfaz, sin acción)
-            Button(onClick = { /* no implementado */ }) {
+            // Botones de cámara y galería
+            /*
+            Button(onClick = onGoToCamera) {
                 Text(text = stringResource(R.string.btn_open_camera))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Botón de galería (solo interfaz, sin acción)
-            Button(onClick = { /* no implementado */ }) {
+            Button(onClick = onGoToGallery) {
                 Text(text = stringResource(R.string.btn_open_gallery))
             }
+            */
         }
     }
 }

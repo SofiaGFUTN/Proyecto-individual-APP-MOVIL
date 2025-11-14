@@ -1,9 +1,11 @@
-package Data
+package cr.ac.utn.conversordemonedas.data
 
-import Model.Currency
+import cr.ac.utn.conversordemonedas.model.Conversion
 
 interface IDataManager {
-    fun getCurrencies(): List<Currency>
-    fun getCurrency(code: String): Currency?
-    fun addCurrency(currency: Currency)
+    fun addConversion(conversion: Conversion)
+    fun getAllConversions(): MutableList<Conversion>
+    fun updateConversion(conversion: Conversion)
+    fun deleteConversion(id: Int)
+    fun findConversionByCurrency(currency: String): MutableList<Conversion>
 }
