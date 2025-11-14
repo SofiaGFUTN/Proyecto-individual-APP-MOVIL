@@ -7,9 +7,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- Título -->
-
-    <!-- Lista de historial -->
+    <!--Título superior-->
     <TextView
         android:id="@+id/Title_history"
         android:layout_width="match_parent"
@@ -19,8 +17,10 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
 
+    <!--Lista del historial-->
     <ListView
         android:id="@+id/listHistory"
         android:layout_width="match_parent"
@@ -30,29 +30,28 @@
         android:dividerHeight="1dp"
         android:layout_marginBottom="10dp" />
 
-    <!-- Texto si está vacío -->
+    <!--Mensaje cuando la lista está vacía-->
     <TextView
         android:id="@+id/txtEmptyHistory"
-        android:text="@string/history_empty"
+        android:text="No hay conversiones recientes"
         android:textSize="16sp"
         android:textColor="#777777"
         android:layout_marginBottom="20dp"
-        android:visibility="gone"
         android:gravity="center"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <!-- Botones -->
-
+    <!--Botones de acción-->
     <LinearLayout
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btnBackHistory"
-            android:text="@string/btn_back"
+            android:text="Volver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,7 +62,7 @@
 
         <Button
             android:id="@+id/btnClearHistory"
-            android:text="@string/history_clear_all"
+            android:text="Borrar todo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

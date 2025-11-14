@@ -2,10 +2,14 @@ package cr.ac.utn.conversordemonedas
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import cr.ac.utn.conversordemonedas.ui.theme.ConversorDeMonedasTheme
 
 class ConversionActivity : ComponentActivity() {
@@ -14,13 +18,14 @@ class ConversionActivity : ComponentActivity() {
     private lateinit var adapterRecent: ArrayAdapter<String>
     private val recentConversions = mutableListOf<String>()
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { ConversorDeMonedasTheme { } }
         setContentView(R.layout.conversion_activity)
 
-        //Referencias del layout XML
+        // --- Referencias del layout ---
         val spinnerFrom = findViewById<Spinner>(R.id.typeMoney1_conversion)
         val spinnerTo = findViewById<Spinner>(R.id.typeMoney2_conversion)
         val etAmount = findViewById<EditText>(R.id.editTextNumberDecimal)
@@ -37,11 +42,14 @@ class ConversionActivity : ComponentActivity() {
         val iconDelete = findViewById<ImageButton>(R.id.iconDelete)
         val iconSearch = findViewById<ImageButton>(R.id.iconSearch)
 
-        //El adaptador para conversiones recientes
+        //Configura lista de conversiones recientes
         adapterRecent = ArrayAdapter(this, android.R.layout.simple_list_item_1, recentConversions)
         listRecent.adapter = adapterRecent
 
-        //Recargar los spinners
+        //Cargar historial previo guardado en SharedPreferences
+        loadHistory()
+
+        //Refrescar los spinners
         fun refreshSpinners() {
             val codes = controller.getAllCurrencies().map { it.code }
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, codes)
@@ -49,10 +57,15 @@ class ConversionActivity : ComponentActivity() {
             spinnerFrom.adapter = adapter
             spinnerTo.adapter = adapter
         }
-
         refreshSpinners()
 
-        //AGREGAR
+        //Función auxiliar para marcar errores visualmente
+        fun highlightField(view: EditText, isError: Boolean) {
+            if (isError) view.setBackgroundColor(Color.parseColor("#FFCDD2"))
+            else view.setBackgroundColor(Color.TRANSPARENT)
+        }
+
+        //AGREGAR moneda
         iconAdd.setOnClickListener {
             val dialogView = layoutInflater.inflate(R.layout.dialog_currency, null)
             val etCode = dialogView.findViewById<EditText>(R.id.etCode)
@@ -67,7 +80,12 @@ class ConversionActivity : ComponentActivity() {
                     val name = etName.text.toString()
                     val rate = etRate.text.toString().toDoubleOrNull()
 
-                    if (code.isEmpty() || name.isEmpty() || rate == null) {
+                    val invalid = code.isEmpty() || name.isEmpty() || rate == null
+                    highlightField(etCode, code.isEmpty())
+                    highlightField(etName, name.isEmpty())
+                    highlightField(etRate, rate == null)
+
+                    if (invalid) {
                         Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
@@ -84,7 +102,7 @@ class ConversionActivity : ComponentActivity() {
                 .show()
         }
 
-        //EDITAR
+        //EDITAR moneda
         iconEdit.setOnClickListener {
             val dialogView = layoutInflater.inflate(R.layout.dialog_currency, null)
             val etCode = dialogView.findViewById<EditText>(R.id.etCode)
@@ -99,7 +117,12 @@ class ConversionActivity : ComponentActivity() {
                     val name = etName.text.toString()
                     val rate = etRate.text.toString().toDoubleOrNull()
 
-                    if (code.isEmpty() || name.isEmpty() || rate == null) {
+                    val invalid = code.isEmpty() || name.isEmpty() || rate == null
+                    highlightField(etCode, code.isEmpty())
+                    highlightField(etName, name.isEmpty())
+                    highlightField(etRate, rate == null)
+
+                    if (invalid) {
                         Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
@@ -116,7 +139,7 @@ class ConversionActivity : ComponentActivity() {
                 .show()
         }
 
-        //ELIMINAR
+        //ELIMINAR moneda
         iconDelete.setOnClickListener {
             val input = EditText(this)
             input.hint = getString(R.string.hint_currency_code)
@@ -126,6 +149,13 @@ class ConversionActivity : ComponentActivity() {
                 .setView(input)
                 .setPositiveButton(getString(R.string.btn_delete_currency)) { _, _ ->
                     val code = input.text.toString().uppercase()
+                    highlightField(input, code.isEmpty())
+
+                    if (code.isEmpty()) {
+                        Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+
                     if (controller.deleteCurrency(code)) {
                         Toast.makeText(this, getString(R.string.msg_currency_deleted), Toast.LENGTH_SHORT).show()
                         refreshSpinners()
@@ -137,7 +167,7 @@ class ConversionActivity : ComponentActivity() {
                 .show()
         }
 
-        //BUSCAR
+        //BUSCAR moneda
         iconSearch.setOnClickListener {
             val input = EditText(this)
             input.hint = getString(R.string.hint_currency_code)
@@ -147,13 +177,16 @@ class ConversionActivity : ComponentActivity() {
                 .setView(input)
                 .setPositiveButton(getString(R.string.btn_ok)) { _, _ ->
                     val code = input.text.toString().uppercase()
+                    highlightField(input, code.isEmpty())
+
+                    if (code.isEmpty()) {
+                        Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+
                     val currency = controller.searchCurrency(code)
                     if (currency != null) {
-                        Toast.makeText(
-                            this,
-                            "${currency.name}: ${currency.rate}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "${currency.name}: ${currency.rate}", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(this, getString(R.string.msg_currency_not_found), Toast.LENGTH_SHORT).show()
                     }
@@ -162,18 +195,22 @@ class ConversionActivity : ComponentActivity() {
                 .show()
         }
 
-        //CONVERTIR MONEDAS
+        //CONVERTIR moneda
         btnConvert.setOnClickListener {
             val amountText = etAmount.text.toString()
-            if (amountText.isEmpty()) {
+            val fromCode = spinnerFrom.selectedItem?.toString()
+            val toCode = spinnerTo.selectedItem?.toString()
+
+            val amountValid = amountText.isNotEmpty()
+            highlightField(etAmount, !amountValid)
+
+            if (!amountValid) {
                 Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val fromCode = spinnerFrom.selectedItem?.toString()
-            val toCode = spinnerTo.selectedItem?.toString()
             if (fromCode == null || toCode == null) {
-                Toast.makeText(this, "Seleccione la moneda", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Seleccione las monedas", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -187,8 +224,15 @@ class ConversionActivity : ComponentActivity() {
                 txtRate.text = "Tarifa actual: 1 ${from.code} = ${"%.2f".format(to.rate / from.rate)} ${to.code}"
 
                 val record = "$amount ${from.code} → ${"%.2f".format(result)} ${to.code}"
-                recentConversions.add(0, record)
+
+                //Evitar duplicados y limitar historial
+                if (!recentConversions.contains(record)) {
+                    recentConversions.add(0, record)
+                    if (recentConversions.size > 10) recentConversions.removeLast()
+                }
+
                 adapterRecent.notifyDataSetChanged()
+                saveHistory()
             } else {
                 Toast.makeText(this, getString(R.string.msg_conversion_error), Toast.LENGTH_SHORT).show()
             }
@@ -198,11 +242,27 @@ class ConversionActivity : ComponentActivity() {
         btnClear.setOnClickListener {
             etAmount.text.clear()
             txtResult.text = "—"
+            txtRate.text = ""
+            highlightField(etAmount, false)
         }
 
-        //ACTUALIZAR
+        //ACTUALIZAR tarifa
         btnUpdate.setOnClickListener {
             Toast.makeText(this, getString(R.string.msg_rate_updated), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    //Guardar en historial
+    private fun saveHistory() {
+        val prefs = getSharedPreferences("history", Context.MODE_PRIVATE)
+        prefs.edit().putStringSet("conversions", recentConversions.toSet()).apply()
+    }
+
+    //Cargar historial guardado
+    private fun loadHistory() {
+        val prefs = getSharedPreferences("history", Context.MODE_PRIVATE)
+        val saved = prefs.getStringSet("conversions", emptySet()) ?: emptySet()
+        recentConversions.clear()
+        recentConversions.addAll(saved.sortedDescending()) // muestra las más recientes arriba
     }
 }
