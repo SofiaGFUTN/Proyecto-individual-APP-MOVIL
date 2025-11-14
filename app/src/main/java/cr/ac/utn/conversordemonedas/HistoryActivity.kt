@@ -1,5 +1,6 @@
 package cr.ac.utn.conversordemonedas
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,24 +21,27 @@ class HistoryActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ConversorDeMonedasTheme {
-                HistoryScreen()
+                HistoryScreen(this)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen() {
-    // Simulación de historial (luego puedes hacerlo dinámico con SharedPreferences o Room)
-    val historyList = remember {
-        mutableStateListOf(
-            "65 USD → 33,822.75 CRC (2 min ago)",
-            "120 EUR → 70,000 CRC (Yesterday)",
-            "50,000 CRC → 96.15 USD (Today)"
-        )
-    }
+fun HistoryScreen(context: Context) {
+    //Cargar historial guardado en SharedPreferences
+    val prefs = context.getSharedPreferences("conversion_history", Context.MODE_PRIVATE)
+    val savedHistory = prefs.getStringSet("records", emptySet())?.toMutableList() ?: mutableListOf()
+
+    val historyList = remember { mutableStateListOf<String>().apply { addAll(savedHistory) } }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Historial de conversiones", fontWeight = FontWeight.Bold, fontSize = 20.sp) }
+            )
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -47,11 +50,13 @@ fun HistoryScreen() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Spacer(modifier = Modifier.height(16.dp))
 
             if (historyList.isEmpty()) {
-                Text(text = stringResource(R.string.history_empty))
+                Text(
+                    text = "No hay conversiones recientes",
+                    fontSize = 16.sp
+                )
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
@@ -60,24 +65,27 @@ fun HistoryScreen() {
                     items(historyList) { conversion ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            elevation = CardDefaults.cardElevation(2.dp)
+                            elevation = CardDefaults.cardElevation(3.dp)
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(conversion)
-                            }
+                            Text(
+                                text = conversion,
+                                modifier = Modifier.padding(12.dp)
+                            )
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Button(onClick = { historyList.clear() }) {
-                    Text(text = stringResource(R.string.history_clear_all))
+                Button(
+                    onClick = {
+                        //Limpiar historial tanto en pantalla como en memoria
+                        historyList.clear()
+                        prefs.edit().remove("records").apply()
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Text("Borrar todo")
                 }
             }
         }
