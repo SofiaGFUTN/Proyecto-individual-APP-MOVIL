@@ -23,17 +23,10 @@ class MainActivity : ComponentActivity() {
                         val intent = Intent(this, ConversionActivity::class.java)
                         startActivity(intent)
                     },
-                    // Las siguientes están comentadas porque aún no usas cámara ni galería
-                    /*
-                    onGoToCamera = {
-                        val intent = Intent(this, CameraActivity::class.java)
-                        startActivity(intent)
-                    },
-                    onGoToGallery = {
-                        val intent = Intent(this, GalleryActivity::class.java)
+                    onGoToHistory = {
+                        val intent = Intent(this, HistoryActivity::class.java)
                         startActivity(intent)
                     }
-                    */
                 )
             }
         }
@@ -43,8 +36,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainMenuScreen(
     onGoToConversion: () -> Unit,
-    //onGoToCamera: () -> Unit,
-    //onGoToGallery: () -> Unit
+    onGoToHistory: () -> Unit
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -57,24 +49,21 @@ fun MainMenuScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            //Botón para ir a la conversión
             Button(onClick = onGoToConversion) {
-                Text(text = "Ir a conversión")
+                Text(text = stringResource(R.string.btn_go_to_conversion))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Botones de cámara y galería
-            /*
-            Button(onClick = onGoToCamera) {
-                Text(text = stringResource(R.string.btn_open_camera))
+            //Botón para ir al historial
+            Button(onClick = onGoToHistory) {
+                Text(text = "Ver historial")
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Button(onClick = onGoToGallery) {
-                Text(text = stringResource(R.string.btn_open_gallery))
-            }
-            */
+            // (Más adelante aquí puedes volver a activar los de cámara y galería)
         }
     }
 }
