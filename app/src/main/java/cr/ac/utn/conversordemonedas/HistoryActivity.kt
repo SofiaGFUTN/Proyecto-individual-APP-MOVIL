@@ -30,16 +30,25 @@ class HistoryActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(context: Context) {
-    //Cargar historial guardado en SharedPreferences
+    // Cargar historial guardado en SharedPreferences
     val prefs = context.getSharedPreferences("conversion_history", Context.MODE_PRIVATE)
-    val savedHistory = prefs.getStringSet("records", emptySet())?.toMutableList() ?: mutableListOf()
+    val savedHistory =
+        prefs.getStringSet("records", emptySet())?.toMutableList() ?: mutableListOf()
 
-    val historyList = remember { mutableStateListOf<String>().apply { addAll(savedHistory) } }
+    val historyList = remember {
+        mutableStateListOf<String>().apply { addAll(savedHistory) }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Historial de conversiones", fontWeight = FontWeight.Bold, fontSize = 20.sp) }
+                title = {
+                    Text(
+                        "Historial de conversiones",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                }
             )
         }
     ) { innerPadding ->
@@ -79,7 +88,7 @@ fun HistoryScreen(context: Context) {
 
                 Button(
                     onClick = {
-                        //Limpiar historial tanto en pantalla como en memoria
+                        // Limpiar historial tanto en pantalla como en memoria
                         historyList.clear()
                         prefs.edit().remove("records").apply()
                     },
