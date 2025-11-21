@@ -20,12 +20,16 @@ class MainActivity : ComponentActivity() {
             ConversorDeMonedasTheme {
                 MainMenuScreen(
                     onGoToConversion = {
-                        val intent = Intent(this, ConversionActivity::class.java)
-                        startActivity(intent)
+                        startActivity(Intent(this, ConversionActivity::class.java))
                     },
                     onGoToHistory = {
-                        val intent = Intent(this, HistoryActivity::class.java)
-                        startActivity(intent)
+                        startActivity(Intent(this, HistoryActivity::class.java))
+                    },
+                    onGoToCamera = {
+                        startActivity(Intent(this, CameraActivity::class.java))
+                    },
+                    onGoToGallery = {
+                        startActivity(Intent(this, GalleryActivity::class.java))
                     }
                 )
             }
@@ -36,7 +40,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainMenuScreen(
     onGoToConversion: () -> Unit,
-    onGoToHistory: () -> Unit
+    onGoToHistory: () -> Unit,
+    onGoToCamera: () -> Unit,
+    onGoToGallery: () -> Unit
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -49,21 +55,31 @@ fun MainMenuScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            //Botón para ir a la conversión
+            // Botón para ir a la conversión
             Button(onClick = onGoToConversion) {
                 Text(text = stringResource(R.string.btn_go_to_conversion))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            //Botón para ir al historial
+            // Botón para ir al historial
             Button(onClick = onGoToHistory) {
                 Text(text = "Ver historial")
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Botón para ir a la cámara
+            Button(onClick = onGoToCamera) {
+                Text(text = "Open Camera")
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
 
-            // (Más adelante aquí puedes volver a activar los de cámara y galería)
+            // Botón para ir a la galería
+            Button(onClick = onGoToGallery) {
+                Text(text = "Open Gallery")
+            }
         }
     }
 }
