@@ -8,24 +8,25 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import cr.ac.utn.conversordemonedas.ui.theme.ConversorDeMonedasTheme
+import cr.ac.utn.conversordemonedas.model.Currency
+import cr.ac.utn.conversordemonedas.network.RemoteCurrencyDataManager
+import cr.ac.utn.conversordemonedas.controller.CurrencyController
 
 class ConversionActivity : ComponentActivity() {
 
-    private val controller = CurrencyController()
     private lateinit var adapterRecent: ArrayAdapter<String>
     private val recentConversions = mutableListOf<String>()
+
+    private var currencyList: List<Currency> = emptyList()
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { ConversorDeMonedasTheme { } }
         setContentView(R.layout.conversion_activity)
 
-        // --- Referencias del layout ---
+        //Variables
         val spinnerFrom = findViewById<Spinner>(R.id.typeMoney1_conversion)
         val spinnerTo = findViewById<Spinner>(R.id.typeMoney2_conversion)
         val etAmount = findViewById<EditText>(R.id.editTextNumberDecimal)
@@ -42,227 +43,270 @@ class ConversionActivity : ComponentActivity() {
         val iconDelete = findViewById<ImageButton>(R.id.iconDelete)
         val iconSearch = findViewById<ImageButton>(R.id.iconSearch)
 
-        //Configura lista de conversiones recientes
         adapterRecent = ArrayAdapter(this, android.R.layout.simple_list_item_1, recentConversions)
         listRecent.adapter = adapterRecent
 
-        //Cargar historial previo guardado en SharedPreferences
         loadHistory()
 
-        //Refrescar los spinners
         fun refreshSpinners() {
-            val codes = controller.getAllCurrencies().map { it.code }
+            val codes = currencyList.map { it.code }
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, codes)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerFrom.adapter = adapter
             spinnerTo.adapter = adapter
         }
-        refreshSpinners()
 
-        //Función auxiliar para marcar errores visualmente
-        fun highlightField(view: EditText, isError: Boolean) {
-            if (isError) view.setBackgroundColor(Color.parseColor("#FFCDD2"))
-            else view.setBackgroundColor(Color.TRANSPARENT)
+        loadCurrencies { refreshSpinners() }
+
+        fun highlight(view: EditText, error: Boolean) {
+            view.setBackgroundColor(if (error) Color.parseColor("#FFCDD2") else Color.TRANSPARENT)
         }
 
-        //AGREGAR moneda
+        //Add currency
         iconAdd.setOnClickListener {
-            val dialogView = layoutInflater.inflate(R.layout.dialog_currency, null)
-            val etCode = dialogView.findViewById<EditText>(R.id.etCode)
-            val etName = dialogView.findViewById<EditText>(R.id.etName)
-            val etRate = dialogView.findViewById<EditText>(R.id.etRate)
+            val view = layoutInflater.inflate(R.layout.dialog_currency, null)
+            val etCode = view.findViewById<EditText>(R.id.etCode)
+            val etName = view.findViewById<EditText>(R.id.etName)
+            val etRate = view.findViewById<EditText>(R.id.etRate)
 
             AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_add_currency))
-                .setView(dialogView)
-                .setPositiveButton(getString(R.string.btn_save)) { _, _ ->
+                .setTitle("Agregar moneda")
+                .setView(view)
+                .setPositiveButton("Guardar") { _, _ ->
                     val code = etCode.text.toString().uppercase()
                     val name = etName.text.toString()
                     val rate = etRate.text.toString().toDoubleOrNull()
 
                     val invalid = code.isEmpty() || name.isEmpty() || rate == null
-                    highlightField(etCode, code.isEmpty())
-                    highlightField(etName, name.isEmpty())
-                    highlightField(etRate, rate == null)
+                    highlight(etCode, code.isEmpty())
+                    highlight(etName, name.isEmpty())
+                    highlight(etRate, rate == null)
 
                     if (invalid) {
-                        Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
 
-                    val added = controller.addCurrency(Currency(code, name, rate))
-                    if (added) {
-                        Toast.makeText(this, getString(R.string.msg_currency_added), Toast.LENGTH_SHORT).show()
-                        refreshSpinners()
-                    } else {
-                        Toast.makeText(this, getString(R.string.msg_currency_exists), Toast.LENGTH_SHORT).show()
-                    }
+                    RemoteCurrencyDataManager.addCurrency(code, name, rate!!,
+                        onDone = {
+                            runOnUiThread {
+                                Toast.makeText(this, "Moneda agregada", Toast.LENGTH_SHORT).show()
+                                loadCurrencies { refreshSpinners() }
+                            }
+                        },
+                        onError = {
+                            runOnUiThread {
+                                Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
                 }
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancelar", null)
                 .show()
         }
 
-        //EDITAR moneda
+        //EDIT CURRENCY
         iconEdit.setOnClickListener {
-            val dialogView = layoutInflater.inflate(R.layout.dialog_currency, null)
-            val etCode = dialogView.findViewById<EditText>(R.id.etCode)
-            val etName = dialogView.findViewById<EditText>(R.id.etName)
-            val etRate = dialogView.findViewById<EditText>(R.id.etRate)
+            val view = layoutInflater.inflate(R.layout.dialog_currency, null)
+            val etCode = view.findViewById<EditText>(R.id.etCode)
+            val etName = view.findViewById<EditText>(R.id.etName)
+            val etRate = view.findViewById<EditText>(R.id.etRate)
 
             AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_edit_currency))
-                .setView(dialogView)
-                .setPositiveButton(getString(R.string.btn_save)) { _, _ ->
+                .setTitle("Editar moneda")
+                .setView(view)
+                .setPositiveButton("Guardar") { _, _ ->
                     val code = etCode.text.toString().uppercase()
                     val name = etName.text.toString()
                     val rate = etRate.text.toString().toDoubleOrNull()
 
                     val invalid = code.isEmpty() || name.isEmpty() || rate == null
-                    highlightField(etCode, code.isEmpty())
-                    highlightField(etName, name.isEmpty())
-                    highlightField(etRate, rate == null)
+                    highlight(etCode, code.isEmpty())
+                    highlight(etName, name.isEmpty())
+                    highlight(etRate, rate == null)
 
                     if (invalid) {
-                        Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
 
-                    val updated = controller.updateCurrency(code, name, rate)
-                    if (updated) {
-                        Toast.makeText(this, getString(R.string.msg_currency_updated), Toast.LENGTH_SHORT).show()
-                        refreshSpinners()
-                    } else {
-                        Toast.makeText(this, getString(R.string.msg_currency_not_found), Toast.LENGTH_SHORT).show()
+                    val currency = currencyList.find { it.code == code }
+                    if (currency == null) {
+                        Toast.makeText(this, "Moneda no encontrada", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
                     }
+
+                    RemoteCurrencyDataManager.updateCurrency(currency.id!!, name, rate!!,
+                        onDone = {
+                            runOnUiThread {
+                                Toast.makeText(this, "Moneda actualizada", Toast.LENGTH_SHORT).show()
+                                loadCurrencies { refreshSpinners() }
+                            }
+                        },
+                        onError = {
+                            runOnUiThread {
+                                Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
                 }
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancelar", null)
                 .show()
         }
 
-        //ELIMINAR moneda
+        //REMOVE MONEY
         iconDelete.setOnClickListener {
             val input = EditText(this)
-            input.hint = getString(R.string.hint_currency_code)
+            input.hint = "Código de moneda"
 
             AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_delete_currency))
+                .setTitle("Eliminar moneda")
                 .setView(input)
-                .setPositiveButton(getString(R.string.btn_delete_currency)) { _, _ ->
+                .setPositiveButton("Eliminar") { _, _ ->
                     val code = input.text.toString().uppercase()
-                    highlightField(input, code.isEmpty())
+                    highlight(input, code.isEmpty())
+                    if (code.isEmpty()) return@setPositiveButton
 
-                    if (code.isEmpty()) {
-                        Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
+                    val currency = currencyList.find { it.code == code }
+                    if (currency == null) {
+                        Toast.makeText(this, "No existe", Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
 
-                    if (controller.deleteCurrency(code)) {
-                        Toast.makeText(this, getString(R.string.msg_currency_deleted), Toast.LENGTH_SHORT).show()
-                        refreshSpinners()
-                    } else {
-                        Toast.makeText(this, getString(R.string.msg_currency_not_found), Toast.LENGTH_SHORT).show()
-                    }
+                    RemoteCurrencyDataManager.deleteCurrency(currency.id!!,
+                        onDone = {
+                            runOnUiThread {
+                                Toast.makeText(this, "Eliminada", Toast.LENGTH_SHORT).show()
+                                loadCurrencies { refreshSpinners() }
+                            }
+                        },
+                        onError = {
+                            runOnUiThread {
+                                Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
                 }
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancelar", null)
                 .show()
         }
 
-        //BUSCAR moneda
+        //SEARCH FOR MONEY
         iconSearch.setOnClickListener {
             val input = EditText(this)
-            input.hint = getString(R.string.hint_currency_code)
+            input.hint = "Código de moneda"
 
             AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_search_currency))
+                .setTitle("Buscar moneda")
                 .setView(input)
-                .setPositiveButton(getString(R.string.btn_ok)) { _, _ ->
+                .setPositiveButton("OK") { _, _ ->
                     val code = input.text.toString().uppercase()
-                    highlightField(input, code.isEmpty())
+                    if (code.isEmpty()) return@setPositiveButton
 
-                    if (code.isEmpty()) {
-                        Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
-                        return@setPositiveButton
-                    }
-
-                    val currency = controller.searchCurrency(code)
-                    if (currency != null) {
+                    val currency = currencyList.find { it.code == code }
+                    if (currency != null)
                         Toast.makeText(this, "${currency.name}: ${currency.rate}", Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(this, getString(R.string.msg_currency_not_found), Toast.LENGTH_SHORT).show()
-                    }
+                    else
+                        Toast.makeText(this, "No encontrada", Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancelar", null)
                 .show()
         }
 
-        //CONVERTIR moneda
+        //CONVERT CURRENCY
         btnConvert.setOnClickListener {
-            val amountText = etAmount.text.toString()
-            val fromCode = spinnerFrom.selectedItem?.toString()
-            val toCode = spinnerTo.selectedItem?.toString()
+            try {
+                val amountText = etAmount.text.toString()
+                val from = spinnerFrom.selectedItem?.toString()
+                val to = spinnerTo.selectedItem?.toString()
 
-            val amountValid = amountText.isNotEmpty()
-            highlightField(etAmount, !amountValid)
+                if (amountText.isEmpty()) {
+                    Toast.makeText(this, "Ingrese una cantidad", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-            if (!amountValid) {
-                Toast.makeText(this, getString(R.string.msg_invalid_input), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+                val amount = amountText.toDoubleOrNull()
+                if (amount == null || amount <= 0) {
+                    Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-            if (fromCode == null || toCode == null) {
-                Toast.makeText(this, "Seleccione las monedas", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+                if (from == null || to == null) {
+                    Toast.makeText(this, "Seleccione las monedas", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-            val from = controller.searchCurrency(fromCode)
-            val to = controller.searchCurrency(toCode)
-            val amount = amountText.toDoubleOrNull() ?: 0.0
+                val fromCurrency = currencyList.find { it.code == from }
+                val toCurrency = currencyList.find { it.code == to }
 
-            if (from != null && to != null) {
-                val result = (amount / from.rate) * to.rate
-                txtResult.text = "%.2f".format(result)
-                txtRate.text = "Tarifa actual: 1 ${from.code} = ${"%.2f".format(to.rate / from.rate)} ${to.code}"
+                if (fromCurrency == null || toCurrency == null) {
+                    Toast.makeText(this, "Error: Monedas no encontradas", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-                val record = "$amount ${from.code} → ${"%.2f".format(result)} ${to.code}"
+                //LOCAL CONVERSION
+                // Fórmula: amount * (toRate / fromRate)
+                val result = amount * (toCurrency.rate / fromCurrency.rate)
 
-                //Evitar duplicados y limitar historial
+                txtResult.text = String.format("%.2f", result)
+                txtRate.text = "1 $from = ${String.format("%.4f", toCurrency.rate / fromCurrency.rate)} $to"
+
+                //Save to recent history
+                val record = "$amount $from → ${String.format("%.2f", result)} $to"
                 if (!recentConversions.contains(record)) {
                     recentConversions.add(0, record)
-                    if (recentConversions.size > 10) recentConversions.removeLast()
+                    if (recentConversions.size > 10) {
+                        recentConversions.removeLast()
+                    }
                 }
 
                 adapterRecent.notifyDataSetChanged()
                 saveHistory()
-            } else {
-                Toast.makeText(this, getString(R.string.msg_conversion_error), Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this, "Conversión exitosa", Toast.LENGTH_SHORT).show()
+
+            } catch (e: Exception) {
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
             }
         }
 
-        //LIMPIAR
         btnClear.setOnClickListener {
             etAmount.text.clear()
             txtResult.text = "—"
             txtRate.text = ""
-            highlightField(etAmount, false)
         }
 
-        //ACTUALIZAR tarifa
         btnUpdate.setOnClickListener {
-            Toast.makeText(this, getString(R.string.msg_rate_updated), Toast.LENGTH_SHORT).show()
+            loadCurrencies { refreshSpinners() }
+            Toast.makeText(this, "Tarifas actualizadas", Toast.LENGTH_SHORT).show()
         }
     }
 
-    //Guardar en historial
+    private fun loadCurrencies(onFinish: () -> Unit) {
+        RemoteCurrencyDataManager.getAllCurrencies(
+            onResult = { list ->
+                currencyList = list
+                runOnUiThread { onFinish() }
+            },
+            onError = { error ->
+                runOnUiThread {
+                    Toast.makeText(this, "Error loading currencies: ${error.message}", Toast.LENGTH_SHORT).show()
+                    onFinish()
+                }
+            }
+        )
+    }
+
     private fun saveHistory() {
         val prefs = getSharedPreferences("history", Context.MODE_PRIVATE)
         prefs.edit().putStringSet("conversions", recentConversions.toSet()).apply()
     }
 
-    //Cargar historial guardado
     private fun loadHistory() {
         val prefs = getSharedPreferences("history", Context.MODE_PRIVATE)
         val saved = prefs.getStringSet("conversions", emptySet()) ?: emptySet()
         recentConversions.clear()
-        recentConversions.addAll(saved.sortedDescending()) // muestra las más recientes arriba
+        recentConversions.addAll(saved.sortedDescending())
     }
 }

@@ -3,6 +3,7 @@
     <string name="app_name">Currency Converter</string>
     <string name="btn_start_conversion">Start Conversion</string>
     <string name="btn_open_camera">Open Camera</string>
+    <string name="btnHistory">Open History</string>
     <string name="btn_open_gallery">Choose from Gallery</string>
     <string name="btn_go_to_conversion">Go to Conversion</string>
     <string name="label_amount">Enter amount</string>
@@ -12,18 +13,12 @@
     <string name="msg_invalid_input">Please enter a valid number.</string>
     <string name="msg_conversion_error">An error occurred during conversion.</string>
     <string name="msg_rate_updated">Exchange rate updated successfully.</string>
-    <string name="camera_instruction">Point the camera at a number to detect and convert it automatically.</string>
-    <string name="btn_take_photo">Take Picture</string>
-    <string name="msg_camera_permission">Camera permission is required to scan amounts.</string>
-    <string name="msg_camera_error">Unable to access camera. Please try again.</string>
+    <string name="camera_permission_denied">Camera permission denid</string>
     <string name="gallery_title">Select from Gallery</string>
-    <string name="gallery_instruction">Choose an image with numbers to convert.</string>
-    <string name="btn_select_image">Select Image</string>
-    <string name="msg_no_image_selected">No image selected.</string>
-    <string name="msg_image_processed">Image processed successfully!</string>
     <string name="history_empty">No conversions yet.</string>
+    <string name="history_back">Back</string>
     <string name="history_clear_all">Clear All</string>
-    <string name="msg_history_cleared">History cleared.</string>
+    <string name="history_cleared">History cleared</string>
     <string name="btn_back">Back</string>
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
@@ -41,6 +36,8 @@
     <string name="msg_currency_deleted">Currency removed.</string>
     <string name="msg_currency_not_found">The coin was not found.</string>
     <string name="msg_all_cleared">All coins were removed.</string>
+    <string name="gallery_upload_success">Upload image successfull</string>
+    <string name="gallery_upload_error">Error</string>
     <string name="dialog_add_currency">Add Money</string>
     <string name="dialog_edit_currency">Edit Money</string>
     <string name="dialog_delete_currency">Delete Money</string>
@@ -48,4 +45,16 @@
     <string name="hint_currency_code">Code (e.g., USD)</string>
     <string name="hint_currency_name">Name (e.g., US Dollar)</string>
     <string name="hint_currency_rate">Rate (e.g., 1.0)</string>
+    <string name="history_title">Currency history</string>
+    <string name="history_error_loading">Loading history error</string>
+    <string name="history_retry">Retard</string>
+    <string name="gallery_select_image">Image select</string>
+    <string name="gallery_upload">Save</string>
+    <string name="gallery_back">Back</string>
+    <string name="camera_title">Camera</string>
+    <string name="camera_take_photo">Take a picture</string>
+    <string name="camera_upload">Upload</string>
+    <string name="camera_back">Back</string>
+    <string name="camera_upload_success">Upload photo successfull</string>
+    <string name="camera_upload_error">Error</string>
 </resources>

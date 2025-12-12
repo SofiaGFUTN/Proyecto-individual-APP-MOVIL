@@ -1,43 +1,117 @@
 package cr.ac.utn.conversordemonedas
 
-import Data.MemoryStorage
-import android.app.Activity
-import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
-import androidx.activity.ComponentActivity
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.storage.FirebaseStorage
 
-class GalleryActivity : ComponentActivity() {
+class GalleryActivity : AppCompatActivity() {
 
-    private val GALLERY_REQUEST = 300
+    private lateinit var imgPreview: ImageView
+    private lateinit var btnPickImage: Button
+    private lateinit var btnUpload: Button
+    private lateinit var btnBack: Button
+
+    private var selectedImageUri: Uri? = null
+
+    //Image selection and saving
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            selectedImageUri = uri
+
+            val bitmap = uriToBitmap(uri)
+            imgPreview.setImageBitmap(bitmap)
+
+            btnUpload.isEnabled = true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
-        val btnPick = findViewById<Button>(R.id.btnPickImage)
-        val imgPreview = findViewById<ImageView>(R.id.imgPreviewGallery)
+        imgPreview = findViewById(R.id.imgPreviewGallery)
+        btnPickImage = findViewById(R.id.btnPickImage)
+        btnUpload = findViewById(R.id.btnUpload)
+        btnBack = findViewById(R.id.btnBack)
 
-        btnPick.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, GALLERY_REQUEST)
+        btnPickImage.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        btnUpload.setOnClickListener {
+            selectedImageUri?.let { uri ->
+                uploadImageToFirebase(uri)
+            }
+        }
+
+        btnBack.setOnClickListener {
+            finish()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun uploadImageToFirebase(uri: Uri) {
+        btnUpload.isEnabled = false
+        btnPickImage.isEnabled = false
 
-        if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
-            val uri = data?.data ?: return
+        //Create a unique name for the image and upload the image
+        val fileName = "gallery_${System.currentTimeMillis()}.jpg"
+        val storageRef = FirebaseStorage.getInstance()
+            .reference
+            .child("gallery_images/$fileName")
+
+        storageRef.putFile(uri)
+            .addOnSuccessListener {
+                Toast.makeText(
+                    this,
+                    getString(R.string.gallery_upload_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                //Show URL to download
+                storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    val imageUrl = downloadUri.toString()
+                    android.util.Log.d("GALLERY", "URL: $imageUrl")
+
+                    val prefs = getSharedPreferences("images", MODE_PRIVATE)
+                    prefs.edit().putString("last_gallery_image", imageUrl).apply()
+                }
+
+                btnUpload.isEnabled = false
+                btnPickImage.isEnabled = true
+            }
+            //Show error
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.gallery_upload_error),
+                    Toast.LENGTH_LONG
+                ).show()
+
+                btnUpload.isEnabled = true
+                btnPickImage.isEnabled = true
+            }
+    }
+
+    //Converts from URI to bitmap
+    private fun uriToBitmap(uri: Uri): Bitmap {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val source = ImageDecoder.createSource(contentResolver, uri)
+            ImageDecoder.decodeBitmap(source)
+        } else {
+            @Suppress("DEPRECATION")
             val inputStream = contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-
-            MemoryStorage.savedImages.add(bitmap)
-
-            finish()
+            BitmapFactory.decodeStream(inputStream)
         }
     }
 }

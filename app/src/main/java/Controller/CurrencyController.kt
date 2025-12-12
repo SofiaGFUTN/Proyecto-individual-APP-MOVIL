@@ -1,55 +1,42 @@
-package cr.ac.utn.conversordemonedas
+package cr.ac.utn.conversordemonedas.controller
 
-data class Currency(
-    var code: String,
-    var name: String,
-    var rate: Double
-)
+import cr.ac.utn.conversordemonedas.model.Currency
+import cr.ac.utn.conversordemonedas.network.RemoteCurrencyDataManager
 
-class CurrencyController {
-    private val currencyList = mutableListOf<Currency>()
+object CurrencyController {
 
-    init {
-        //Datos iniciales de ejemplo
-        currencyList.add(Currency("USD", "Dólar estadounidense", 1.0))
-        currencyList.add(Currency("CRC", "Colón costarricense", 520.0))
-        currencyList.add(Currency("EUR", "Euro", 0.92))
+    fun getAllCurrencies(onSuccess: (List<Currency>) -> Unit, onError: (String) -> Unit) {
+        RemoteCurrencyDataManager.getAllCurrencies(
+            { list -> onSuccess(list) },
+            { t -> onError(t.message ?: "Unknown") }
+        )
     }
 
-    //CREATE
-    fun addCurrency(currency: Currency): Boolean {
-        if (currencyList.any { it.code.equals(currency.code, ignoreCase = true) }) return false
-        currencyList.add(currency)
-        return true
+    fun addCurrency(currency: Currency, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        RemoteCurrencyDataManager.addCurrency(
+            currency.code,
+            currency.name,
+            currency.rate,
+            { onSuccess() },
+            { t -> onError(t.message ?: "Unknown") }
+        )
     }
 
-    //READ
-    fun getAllCurrencies(): List<Currency> {
-        return currencyList
+    fun updateCurrency(id: String, currency: Currency, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        RemoteCurrencyDataManager.updateCurrency(
+            id,
+            currency.name,
+            currency.rate,
+            { onSuccess() },
+            { t -> onError(t.message ?: "Unknown") }
+        )
     }
 
-    //SEARCH
-    fun searchCurrency(code: String): Currency? {
-        return currencyList.find { it.code.equals(code, ignoreCase = true) }
-    }
-
-    //UPDATE
-    fun updateCurrency(code: String, name: String, rate: Double): Boolean {
-        val currency = searchCurrency(code)
-        return if (currency != null) {
-            currency.name = name
-            currency.rate = rate
-            true
-        } else false
-    }
-
-    //DELETE
-    fun deleteCurrency(code: String): Boolean {
-        return currencyList.removeIf { it.code.equals(code, ignoreCase = true) }
-    }
-
-    //DELETE ALL
-    fun clearAll() {
-        currencyList.clear()
+    fun deleteCurrency(id: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        RemoteCurrencyDataManager.deleteCurrency(
+            id,
+            { onSuccess() },
+            { t -> onError(t.message ?: "Unknown") }
+        )
     }
 }

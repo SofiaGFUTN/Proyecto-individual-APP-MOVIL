@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1093086889202",
+    "project_id": "conversordemonedasapi",
+    "storage_bucket": "conversordemonedasapi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093086889202:android:873ec6a9aedcc69a167c6b",
+        "android_client_info": {
+          "package_name": "cr.ac.utn.conversordemonedas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAngW6PhVD6mtb70xh7TgVE-GkBarSKTE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

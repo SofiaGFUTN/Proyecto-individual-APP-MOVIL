@@ -3,19 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:gravity="center">
 
+    <!--Title-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gallery_title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <!--Preview image-->
+    <ImageView
+        android:id="@+id/imgPreviewGallery"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="20dp"
+        android:scaleType="centerCrop"
+        android:background="#CCCCCC"
+        android:contentDescription="@string/gallery_title" />
+
+    <!--Pick image-->
     <Button
         android:id="@+id/btnPickImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Image" />
+        android:backgroundTint="@color/purple_500"
+        android:text="@string/gallery_select_image" />
 
-    <ImageView
-        android:id="@+id/imgPreviewGallery"
+    <!--Save-->
+    <Button
+        android:id="@+id/btnUpload"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/purple_700"
+        android:enabled="false"
+        android:text="@string/gallery_upload"
+        android:textColor="@color/gray_light" />
+
+    <!--Back-->
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:scaleType="centerCrop" />
+        android:text="@string/gallery_back"
+        android:backgroundTint="@color/purple_200" />
 
 </LinearLayout>

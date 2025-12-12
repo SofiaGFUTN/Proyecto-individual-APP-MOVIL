@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- APP GENERAL -->
-    <string name="app_name">Currency Converter</string>
+    <!--APP GENERAL-->
+    <string name="app_name">Conversión de Monedas</string>
 
-    <!-- MAIN MENU -->
+    <!--MAIN MENU-->
     <string name="btn_start_conversion">Iniciar conversión</string>
     <string name="btn_open_camera">Abrir cámara</string>
+    <string name="btnHistory">Ver Historial</string>
     <string name="btn_open_gallery">Elige de la galería</string>
     <string name="btn_go_to_conversion">Ir a Conversión</string>
 
-    <!-- CONVERSION SCREEN -->
+    <!--CONVERSION ACTIVITY-->
     <string name="label_amount">Ingrese la cantidad</string>
     <string name="btn_convert">Convertir</string>
     <string name="btn_clear">Limpiar</string>
@@ -18,12 +19,14 @@
     <string name="msg_conversion_error">Se produjo un error durante la conversión.</string>
     <string name="msg_rate_updated">Tipo de cambio actualizado correctamente.</string>
 
-    <!-- HISTORY -->
-    <string name="history_empty">Aún no hay conversiones.</string>
+    <!--HISTORY ACTIVITY-->
+    <string name="history_title">Historial de conversiones</string>
+    <string name="history_empty">No hay conversiones recientes</string>
+    <string name="history_back">Volver</string>
     <string name="history_clear_all">Borrar todo</string>
-    <string name="msg_history_cleared">Historial borrado.</string>
+    <string name="history_cleared">Historial eliminado</string>
 
-    <!-- COMMON UI TEXT -->
+    <!--COMMON UI TEXT-->
     <string name="btn_back">Atrás</string>
     <string name="btn_save">Guardar</string>
     <string name="btn_cancel">Cancelar</string>
@@ -32,7 +35,7 @@
     <string name="label_loading">Cargando...</string>
     <string name="msg_no_internet">No hay conexión a internet disponible.</string>
 
-    <!-- CRUD Monedas -->
+    <!--CRUD CURRENCY-->
     <string name="btn_add_currency">Agregar moneda</string>
     <string name="btn_edit_currency">Editar moneda</string>
     <string name="btn_delete_currency">Eliminar moneda</string>
@@ -45,6 +48,23 @@
     <string name="msg_currency_not_found">No se encontró la moneda.</string>
     <string name="msg_all_cleared">Todas las monedas fueron eliminadas.</string>
 
+    <!--CAMERA ACTIVITY-->
+    <string name="camera_title">Cámara</string>
+    <string name="camera_take_photo">Tomar Foto</string>
+    <string name="camera_upload">Subir</string>
+    <string name="camera_back">Volver</string>
+    <string name="camera_upload_success">Foto subida exitosamente</string>
+    <string name="camera_upload_error">Error</string>
+    <string name="camera_permission_denied">Permiso de cámara denegado</string>
+
+    <!--GALLERY ACTIVITY-->
+    <string name="gallery_title">Galería</string>
+    <string name="gallery_select_image">Seleccionar Imagen</string>
+    <string name="gallery_upload">Guardar</string>
+    <string name="gallery_back">Volver</string>
+    <string name="gallery_upload_success">Imagen subida exitosamente</string>
+    <string name="gallery_upload_error">Error</string>
+
     <!-- DIALOGS/INPUT HINTS -->
     <string name="dialog_add_currency">Agregar Moneda</string>
     <string name="dialog_edit_currency">Editar Moneda</string>
@@ -54,4 +74,6 @@
     <string name="hint_currency_code">Código (ej: USD)</string>
     <string name="hint_currency_name">Nombre (ej: Dólar Estadounidense)</string>
     <string name="hint_currency_rate">Tasa (ej: 1.0)</string>
+    <string name="history_error_loading">Error al cargar el historial</string>
+    <string name="history_retry">Restablecer</string>
 </resources>

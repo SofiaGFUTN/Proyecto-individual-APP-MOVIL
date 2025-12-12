@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Botones principales -->
         <TextView
             android:id="@+id/Title_main"
             android:layout_width="match_parent"
@@ -29,7 +28,7 @@
             android:id="@+id/Description_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Convierte divisas al instante escribiendo, escaneando o seleccionando desde tu galería"
+            android:text="Convierte monedas al instante"
             android:textAlignment="center"
             android:textSize="16sp" />
 
@@ -42,6 +41,16 @@
             android:background="@drawable/rounded_button"
             android:textColor="@color/white"
             android:padding="12dp" />
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button_light"
+            android:padding="12dp"
+            android:text="@string/btnHistory"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/btnOpenCamera"
@@ -67,6 +76,7 @@
             android:id="@+id/Instruction_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:fontFamily="serif"
             android:text="¿Qué puedes hacer?"
             android:textAlignment="center"
@@ -76,53 +86,38 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/Option1_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:rotationY="0"
                 android:text="- Conversión entre múltiples monedas"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/Option2_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="- Tipos de cambio en tiempo real"
-                android:textAlignment="viewStart"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
 
-            <TextView
-                android:id="@+id/Option3_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="- Escanea las cantidades con tu cámara"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/Option4_main"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="- Lee las cantidades en las imágenes de la galería"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/Option5_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingExtra="14sp"
                 android:text="- Consulta tus conversiones recientes"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
-
