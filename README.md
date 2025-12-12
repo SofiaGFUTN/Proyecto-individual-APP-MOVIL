@@ -20,3 +20,18 @@ Pantalla de conversiones:
 <img width="234" height="504" alt="Captura de pantalla 2025-10-18 135604" src="https://github.com/user-attachments/assets/6e0a8dbd-b59f-4722-bb4a-ae64e0375740" />
 
 
+Endpoints:
+Crear moneda
+POST -> https://us-central1-conversordemonedasapi.cloudfunctions.net/api/currencies/
+Body (JSON):
+{
+"code": "CRC",
+"name": "Colón Costarricense",
+"rate": 515.0
+}
+
+===================================================================================
+
+Ver todas las monedas
+GET -> https://us-central1-conversordemonedasapi.cloudfunctions.net/api/currencies/
+(Hacerlo en Postman o directamente en la barra de un navegador)

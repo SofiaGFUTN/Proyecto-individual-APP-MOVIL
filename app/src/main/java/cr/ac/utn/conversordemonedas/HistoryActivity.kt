@@ -2,101 +2,103 @@ package cr.ac.utn.conversordemonedas
 
 import android.content.Context
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import cr.ac.utn.conversordemonedas.ui.theme.ConversorDeMonedasTheme
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 
-class HistoryActivity : ComponentActivity() {
+class HistoryActivity : AppCompatActivity() {
+
+    private lateinit var listHistory: ListView
+    private lateinit var txtEmptyHistory: TextView
+    private lateinit var btnBackHistory: Button
+    private lateinit var btnClearHistory: Button
+
+    private lateinit var adapter: ArrayAdapter<String>
+    private val historyList = mutableListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            ConversorDeMonedasTheme {
-                HistoryScreen(this)
-            }
-        }
-    }
-}
+        setContentView(R.layout.history_activity)
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HistoryScreen(context: Context) {
-    // Cargar historial guardado en SharedPreferences
-    val prefs = context.getSharedPreferences("conversion_history", Context.MODE_PRIVATE)
-    val savedHistory =
-        prefs.getStringSet("records", emptySet())?.toMutableList() ?: mutableListOf()
+        initViews()
 
-    val historyList = remember {
-        mutableStateListOf<String>().apply { addAll(savedHistory) }
+        setupListView()
+
+        setupListeners()
+
+        loadHistory()
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Historial de conversiones",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                }
-            )
+    private fun initViews() {
+        listHistory = findViewById(R.id.listHistory)
+        txtEmptyHistory = findViewById(R.id.txtEmptyHistory)
+        btnBackHistory = findViewById(R.id.btnBackHistory)
+        btnClearHistory = findViewById(R.id.btnClearHistory)
+    }
+
+    private fun setupListView() {
+        adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            historyList
+        )
+        listHistory.adapter = adapter
+    }
+
+    private fun setupListeners() {
+        //Back button
+        btnBackHistory.setOnClickListener {
+            finish()
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
 
-            if (historyList.isEmpty()) {
-                Text(
-                    text = "No hay conversiones recientes",
-                    fontSize = 16.sp
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(historyList) { conversion ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = CardDefaults.cardElevation(3.dp)
-                        ) {
-                            Text(
-                                text = conversion,
-                                modifier = Modifier.padding(12.dp)
-                            )
-                        }
-                    }
-                }
+        btnClearHistory.setOnClickListener {
+            clearHistory()
+        }
+    }
 
-                Spacer(modifier = Modifier.height(20.dp))
+    private fun loadHistory() {
+        try {
+            val prefs = getSharedPreferences("history", Context.MODE_PRIVATE)
+            val saved = prefs.getStringSet("conversions", emptySet()) ?: emptySet()
 
-                Button(
-                    onClick = {
-                        // Limpiar historial tanto en pantalla como en memoria
-                        historyList.clear()
-                        prefs.edit().remove("records").apply()
-                    },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.errorContainer)
-                ) {
-                    Text("Borrar todo")
-                }
-            }
+            historyList.clear()
+            historyList.addAll(saved.sortedDescending())
+
+            updateUI()
+
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "Error cargando historial: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun clearHistory() {
+        val prefs = getSharedPreferences("history", Context.MODE_PRIVATE)
+        prefs.edit().clear().apply()
+
+        historyList.clear()
+        adapter.notifyDataSetChanged()
+
+        updateUI()
+
+        Toast.makeText(
+            this,
+            getString(R.string.history_cleared),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun updateUI() {
+        if (historyList.isEmpty()) {
+            listHistory.visibility = View.GONE
+            txtEmptyHistory.visibility = View.VISIBLE
+        } else {
+            listHistory.visibility = View.VISIBLE
+            txtEmptyHistory.visibility = View.GONE
+            adapter.notifyDataSetChanged()
         }
     }
 }

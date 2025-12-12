@@ -4,16 +4,29 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
+        android:icon="@mipmap/cm_icon"
+        android:roundIcon="@mipmap/cm_icon_round"
         android:label="@string/app_name"
-        android:theme="@style/Theme.ConversorDeMonedas">
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
-        <activity android:name=".CameraActivity" />
-        <activity android:name=".GalleryActivity" />
-        <activity android:name=".HistoryActivity" />
-        <activity android:name=".ConversionActivity" />
+        <!-- Call for activities -->
+        <activity
+            android:name=".CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GalleryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConversionActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
@@ -23,6 +36,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
 
     </application>
 </manifest>
